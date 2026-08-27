@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ GAMECOIN NEXUS Ultra 3D - Next-Gen Gaming Store</title>
+    <!-- Google Fonts & Canvas Confetti -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #00f0ff;
+            --secondary: #ff007f;
+            --accent: #ffe600;
+            --purple: #7000ff;
+            --bg-dark: #030712;
+            --card-bg: rgba(15, 23, 42, 0.85);
+            --neon-glow-cyan: 0 0 20px rgba(0, 240, 255, 0.6), 0 0 40px rgba(0, 240, 255, 0.3);
+            --neon-glow-pink: 0 0 20px rgba(255, 0, 127, 0.6), 0 0 40px rgba(255, 0, 127, 0.3);
+            --font-title: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Ambient Background Grid & Particles Canvas */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                linear-gradient(to right, rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* HEADER / NAVBAR RESPONSIVE */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(3, 7, 18, 0.9);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-title);
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+            animation: pulse3d 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulse3d {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(10deg); filter: drop-shadow(0 0 15px var(--primary)); }
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        nav a {
+            font-family: var(--font-title);
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .cart-trigger {
+            position: relative;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--font-title);
+            color: var(--primary);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .cart-trigger:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: var(--neon-glow-cyan);
+        }
+
+        .cart-badge {
+            background: var(--secondary);
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            position: relative;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 3rem 8%;
+            gap: 2rem;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 580px;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 0, 127, 0.15);
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-family: var(--font-title);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero h1 {
+            font-family: var(--font-title);
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            line-height: 1.1;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(135deg, #fff 30%, var(--primary) 70%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .hero-btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-cyber {
+            font-family: var(--font-title);
+            padding: 0.9rem 2rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .btn-primary-cyber {
+            background: linear-gradient(135deg, var(--primary), #0088ff);
+            color: #000;
+            box-shadow: var(--neon-glow-cyan);
+        }
+
+        .btn-primary-cyber:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.2);
+        }
+
+        .btn-secondary-cyber {
+            background: transparent;
+            color: #fff;
+            border: 2px solid var(--secondary);
+        }
+
+        .btn-secondary-cyber:hover {
+            background: rgba(255, 0, 127, 0.2);
+            box-shadow: var(--neon-glow-pink);
+        }
+
+        .hero-canvas-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 420px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #hero3DCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* SECTIONS COMMON */
+        .section-container {
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .section-title {
+            font-family: var(--font-title);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        /* 3D INTERACTIVE CARDS WITH REAL CHARACTER IMAGES */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            perspective: 1000px;
+        }
+
+        .card-3d {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.2rem;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out, border-color 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(12px);
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-3d:hover {
+            border-color: var(--primary);
+            box-shadow: 0 15px 35px rgba(0, 240, 255, 0.25);
+        }
+
+        .card-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 1.2rem;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card-3d:hover .card-image {
+            transform: scale(1.08);
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, transparent 60%);
+        }
+
+        .card-character-badge {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            font-family: var(--font-title);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-family: var(--font-title);
+            font-size: 1.3rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-tag {
+            font-size: 0.7rem;
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+        }
+
+        .card-desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 1.2rem;
+            line-height: 1.4;
+        }
+
+        /* COIN PACKAGES GRID WITH REAL GAME ICONS */
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.8rem;
+        }
+
+        .package-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 18px;
+            padding: 1.8rem 1.2rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .package-card.featured {
+            border-color: var(--accent);
+            box-shadow: 0 0 25px rgba(255, 230, 0, 0.2);
+        }
+
+        .package-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, var(--accent), var(--secondary));
+            color: #000;
+            font-family: var(--font-title);
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .package-img-container {
+            width: 90px;
+            height: 90px;
+            margin-bottom: 1rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .package-amount {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 0.2rem;
+        }
+
+        .package-game {
+            color: var(--primary);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .package-price {
+            font-family: var(--font-title);
+            font-size: 1.6rem;
+            color: var(--accent);
+            margin-bottom: 1.2rem;
+        }
+
+        /* CART MODAL RESPONSIVE */
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background: rgba(3, 7, 18, 0.95);
+            backdrop-filter: blur(25px);
+            border-left: 1px solid rgba(0, 240, 255, 0.3);
+            z-index: 1000;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 1.8rem;
+            box-shadow: -20px 0 50px rgba(0,0,0,0.8);
+        }
+
+        .cart-modal.open {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cart-header h2 {
+            font-family: var(--font-title);
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .cart-items-list {
+            flex: 1;
+            overflow-y: auto;
+            margin: 1.2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .cart-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-item-title {
+            font-family: var(--font-title);
+            font-size: 0.9rem;
+        }
+
+        .cart-item-subtitle {
+            color: var(--primary);
+            font-size: 0.8rem;
+        }
+
+        .cart-item-price {
+            font-family: var(--font-title);
+            color: var(--accent);
+            font-size: 1rem;
+        }
+
+        .cart-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1.2rem;
+        }
+
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-title);
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        /* CHECKOUT OVERLAY */
+        .checkout-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            padding: 1rem;
+        }
+
+        .checkout-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .checkout-box {
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.4);
+        }
+
+        .checkout-spinner {
+            width: 60px;
+            height: 60px;
+            margin: 1.5rem auto;
+            border: 4px solid rgba(0, 240, 255, 0.1);
+            border-top-color: var(--primary);
+            border-right-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .sound-toggle {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.6rem 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: var(--font-title);
+            font-size: 0.8rem;
+            z-index: 90;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* RESPONSIVE MEDIA QUERIES */
+        @media (max-width: 992px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 2rem;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+
+            .hero-btn-group {
+                justify-content: center;
+            }
+
+            .hero-canvas-container {
+                height: 320px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .sound-toggle {
+                bottom: 1rem;
+                left: 1rem;
+                font-size: 0.75rem;
+                padding: 0.5rem 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .btn-cyber {
+                width: 100%;
+            }
+
+            .games-grid, .packages-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cyber Canvas Background -->
+    <canvas id="bgCanvas"></canvas>
+    <div class="cyber-grid"></div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header>
+        <div class="logo" onclick="playSound('click')">
+            <div class="logo-icon">⚡</div>
+            GAMECOIN NEXUS
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#games">JUEGOS 3D</a></li>
+                <li><a href="#packages">PAQUETES</a></li>
+            </ul>
+        </nav>
+        <div class="nav-actions">
+            <div class="cart-trigger" onclick="toggleCart()">
+                🛒 CARRITO
+                <span class="cart-badge" id="cartBadge">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">⚡ PLATAFORMA NEXT-GEN DE VIRTUAL CURRENCY</div>
+            <h1>EL FUTURO DE TUS MONEDAS VIRTUALES</h1>
+            <p>Accede instantáneamente a paquetes de V-Bucks, Robux, Diamantes y Puntos con tecnología de transferencia ultra-rápida y simulación 3D interactiva.</p>
+            <div class="hero-btn-group">
+                <button class="btn-cyber btn-primary-cyber" onclick="scrollToSection('packages')">EXPLORAR PAQUETES</button>
+                <button class="btn-cyber btn-secondary-cyber" onclick="scrollToSection('games')">VER JUEGOS 3D</button>
+            </div>
+        </div>
+        <div class="hero-canvas-container">
+            <canvas id="hero3DCanvas"></canvas>
+        </div>
+    </section>
+
+    <!-- FEATURED 3D GAMES SECTION WITH REAL CHARACTER IMAGES -->
+    <section class="section-container" id="games">
+        <h2 class="section-title">🎮 JUEGOS Y PERSONAJES DESTACADOS</h2>
+        <p class="section-subtitle">Pasa el cursor sobre las tarjetas para el efecto Tilt 3D responsive</p>
+        <div class="games-grid" id="gamesGrid">
+            <!-- Dynamic cards -->
+        </div>
+    </section>
+
+    <!-- COIN PACKAGES SECTION WITH REAL ICONS -->
+    <section class="section-container" id="packages">
+        <h2 class="section-title">💎 PAQUETES DE MONEDAS OFICIALES</h2>
+        <p class="section-subtitle">Monedas virtuales con renders animados flotantes</p>
+        <div class="packages-grid" id="packagesGrid">
+            <!-- Dynamic packages -->
+        </div>
+    </section>
+
+    <!-- CART MODAL -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-header">
+            <h2>🛒 MI CARRITO NEXUS</h2>
+            <button class="close-cart" onclick="toggleCart()">✕</button>
+        </div>
+        <div class="cart-items-list" id="cartItemsList"></div>
+        <div class="cart-footer">
+            <div class="cart-total-row">
+                <span>TOTAL:</span>
+                <span id="cartTotal" style="color: var(--accent);">$0.00</span>
+            </div>
+            <button class="btn-cyber btn-primary-cyber" style="width: 100%;" onclick="startCheckout()">PROCEDER AL PAGO ⚡</button>
+        </div>
+    </div>
+
+    <!-- CHECKOUT OVERLAY SIMULATOR -->
+    <div class="checkout-overlay" id="checkoutOverlay">
+        <div class="checkout-box" id="checkoutBox"></div>
+    </div>
+
+    <!-- AUDIO TOGGLE BUTTON -->
+    <button class="sound-toggle" onclick="toggleAudioMaster()">
+        <span id="soundIcon">🔊</span> EFECTOS: <span id="soundStatus">ON</span>
+    </button>
+
+    <script>
+        /* ===================================================
+           1. AUDIO SYNTHESIZER
+           =================================================== */
+        let audioEnabled = true;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioCtx();
+        }
+
+        function playSound(type) {
+            if (!audioEnabled) return;
+            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'hover') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+                gain.gain.setValueAtTime(0.04, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } else if (type === 'click') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(1000, now);
+                osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            } else if (type === 'add') {
+                const osc2 = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+                osc2.connect(gain2);
+                gain2.connect(audioCtx.destination);
+                osc.type = 'sine';
+                osc2.type = 'sine';
+                osc.frequency.setValueAtTime(987.77, now);
+                osc2.frequency.setValueAtTime(1318.51, now + 0.08);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.2);
+                gain2.gain.setValueAtTime(0, now);
+                gain2.gain.setValueAtTime(0.1, now + 0.08);
+                gain2.gain.linearRampToValueAtTime(0, now + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.2);
+                osc2.start(now + 0.08);
+                osc2.stop(now + 0.25);
+            } else if (type === 'success') {
+                const freqs = [523.25, 659.25, 783.99, 1046.50];
+                freqs.forEach((f, i) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.connect(g);
+                    g.connect(audioCtx.destination);
+                    o.type = 'square';
+                    o.frequency.setValueAtTime(f, now + i * 0.1);
+                    g.gain.setValueAtTime(0.06, now + i * 0.1);
+                    g.gain.linearRampToValueAtTime(0, now + i * 0.1 + 0.2);
+                    o.start(now + i * 0.1);
+                    o.stop(now + i * 0.1 + 0.2);
+                });
+            }
+        }
+
+        function toggleAudioMaster() {
+            audioEnabled = !audioEnabled;
+            document.getElementById('soundStatus').textContent = audioEnabled ? 'ON' : 'OFF';
+            document.getElementById('soundIcon').textContent = audioEnabled ? '🔊' : '🔇';
+            if (audioEnabled) playSound('click');
+        }
+
+        /* ===================================================
+           2. DATA WITH REAL IMAGES
+           =================================================== */
+        const gamesData = [
+            { 
+                id: 'fortnite', 
+                name: 'Fortnite', 
+                tag: 'BATTLE ROYALE', 
+                character: 'Jonesy & Peely',
+                desc: 'V-Bucks para Pases de Batalla, Skins legendarias y Emotes.', 
+                image: 'https://images.unsplash.com/photo-1589241062272-c0a000072dfa?auto=format&fit=crop&w=800&q=80'
+            },
+            { 
+                id: 'roblox', 
+                name: 'Roblox', 
+                tag: 'METAVERSE', 
+                character: 'Noob & Avatares VIP',
+                desc: 'Robux para personalizar tu avatar y acceder a experiencias VIP.', 
+                image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'
+            },
+            { 
+                id: 'freefire', 
+                name: 'Free Fire', 
+                tag: 'MOBILE SURVIVAL', 
+                character: 'Alok & Hayato',
+                desc: 'Diamantes para personajes, armas evolutivas y pases elite.', 
+                image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80'
+            },
+            { 
+                id: 'valorant', 
+                name: 'Valorant', 
+                tag: 'TACTICAL SHOOTER', 
+                character: 'Jett & Phoenix',
+                desc: 'VP (Valorant Points) para skins de armas Radiant y Cuchillos.', 
+                image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=800&q=80'
+            }
+        ];
+
+        const packagesData = [
+            { id: 1, amount: '1,000', game: 'Fortnite', price: 7.99, icon: '⚡', featured: false },
+            { id: 2, amount: '2,800', game: 'Fortnite', price: 19.99, icon: '⚡', featured: true },
+            { id: 3, amount: '800', game: 'Roblox', price: 9.99, icon: '💎', featured: false },
+            { id: 4, amount: '2,000', game: 'Roblox', price: 21.99, icon: '💎', featured: true },
+            { id: 5, amount: '1,060', game: 'Free Fire', price: 9.49, icon: '🔥', featured: false },
+            { id: 6, amount: '2,050', game: 'Valorant', price: 18.99, icon: '🔴', featured: true }
+        ];
+
+        let cart = [];
+
+        /* ===================================================
+           3. BACKGROUND PARTICLES
+           =================================================== */
+        const bgCanvas = document.getElementById('bgCanvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        let bgParticles = [];
+
+        function resizeBgCanvas() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeBgCanvas);
+        resizeBgCanvas();
+
+        for (let i = 0; i < 50; i++) {
+            bgParticles.push({
+                x: Math.random() * bgCanvas.width,
+                y: Math.random() * bgCanvas.height,
+                size: Math.random() * 2 + 0.5,
+                speedX: (Math.random() - 0.5) * 0.4,
+                speedY: (Math.random() - 0.5) * 0.4,
+                color: Math.random() > 0.5 ? 'rgba(0, 240, 255, 0.4)' : 'rgba(255, 0, 127, 0.4)'
+            });
+        }
+
+        function animateBgParticles() {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+            bgParticles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                if (p.x < 0) p.x = bgCanvas.width;
+                if (p.x > bgCanvas.width) p.x = 0;
+                if (p.y < 0) p.y = bgCanvas.height;
+                if (p.y > bgCanvas.height) p.y = 0;
+
+                bgCtx.beginPath();
+                bgCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                bgCtx.fillStyle = p.color;
+                bgCtx.fill();
+            });
+            requestAnimationFrame(animateBgParticles);
+        }
+        animateBgParticles();
+
+        /* ===================================================
+           4. HERO 3D ROTATING GEM
+           =================================================== */
+        const heroCanvas = document.getElementById('hero3DCanvas');
+        const hCtx = heroCanvas.getContext('2d');
+        let heroAngle = 0;
+
+        function resizeHeroCanvas() {
+            if (!heroCanvas.parentElement) return;
+            heroCanvas.width = heroCanvas.parentElement.clientWidth;
+            heroCanvas.height = heroCanvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resizeHeroCanvas);
+        resizeHeroCanvas();
+
+        function render3DHeroGem() {
+            const w = heroCanvas.width;
+            const h = heroCanvas.height;
+            if (w === 0 || h === 0) return requestAnimationFrame(render3DHeroGem);
+
+            const cx = w / 2;
+            const cy = h / 2;
+            const size = Math.min(w, h) * 0.28;
+
+            hCtx.clearRect(0, 0, w, h);
+            heroAngle += 0.015;
+
+            const nodes = [
+                {x: 0, y: -size * 1.2, z: 0},
+                {x: Math.cos(heroAngle) * size, y: 0, z: Math.sin(heroAngle) * size},
+                {x: Math.cos(heroAngle + Math.PI/2) * size, y: 0, z: Math.sin(heroAngle + Math.PI/2) * size},
+                {x: Math.cos(heroAngle + Math.PI) * size, y: 0, z: Math.sin(heroAngle + Math.PI) * size},
+                {x: Math.cos(heroAngle + Math.PI*1.5) * size, y: 0, z: Math.sin(heroAngle + Math.PI*1.5) * size},
+                {x: 0, y: size * 1.2, z: 0}
+            ];
+
+            const faces = [
+                [0, 1, 2], [0, 2, 3], [0, 3, 4], [0, 4, 1],
+                [5, 2, 1], [5, 3, 2], [5, 4, 3], [5, 1, 4]
+            ];
+
+            faces.forEach((face, idx) => {
+                const p1 = nodes[face[0]];
+                const p2 = nodes[face[1]];
+                const p3 = nodes[face[2]];
+
+                hCtx.beginPath();
+                hCtx.moveTo(cx + p1.x, cy + p1.y);
+                hCtx.lineTo(cx + p2.x, cy + p2.y);
+                hCtx.lineTo(cx + p3.x, cy + p3.y);
+                hCtx.closePath();
+
+                const grad = hCtx.createLinearGradient(cx + p1.x, cy + p1.y, cx + p3.x, cy + p3.y);
+                if (idx % 2 === 0) {
+                    grad.addColorStop(0, 'rgba(0, 240, 255, 0.75)');
+                    grad.addColorStop(1, 'rgba(112, 0, 255, 0.4)');
+                } else {
+                    grad.addColorStop(0, 'rgba(255, 0, 127, 0.75)');
+                    grad.addColorStop(1, 'rgba(0, 240, 255, 0.3)');
+                }
+
+                hCtx.fillStyle = grad;
+                hCtx.fill();
+                hCtx.strokeStyle = '#ffffff';
+                hCtx.lineWidth = 1.5;
+                hCtx.stroke();
+            });
+
+            requestAnimationFrame(render3DHeroGem);
+        }
+        setTimeout(render3DHeroGem, 100);
+
+        /* ===================================================
+           5. RENDERING GAMES WITH IMAGES & TILT
+           =================================================== */
+        function renderGamesGrid() {
+            const grid = document.getElementById('gamesGrid');
+            grid.innerHTML = gamesData.map(g => `
+                <div class="card-3d" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onmouseenter="playSound('hover')">
+                    <div class="card-image-wrapper">
+                        <img src="${g.image}" alt="${g.name}" class="card-image" loading="lazy">
+                        <div class="card-overlay"></div>
+                        <div class="card-character-badge">👤 ${g.character}</div>
+                    </div>
+                    <div class="card-info">
+                        <div>
+                            <div class="card-title">
+                                ${g.name}
+                                <span class="card-tag">${g.tag}</span>
+                            </div>
+                            <p class="card-desc">${g.desc}</p>
+                        </div>
+                        <button class="btn-cyber btn-primary-cyber" style="width:100%;" onclick="scrollToSection('packages')">VER MONEDAS ⚡</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleTilt(e, card) {
+            if (window.innerWidth < 768) return;
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            card.style.transform = `rotateY(${x / 14}deg) rotateX(${-y / 14}deg) translateZ(10px)`;
+        }
+
+        function resetTilt(card) {
+            card.style.transform = 'rotateY(0deg) rotateX(0deg) translateZ(0px)';
+        }
+
+        /* ===================================================
+           6. RENDERING PACKAGES
+           =================================================== */
+        function renderPackagesGrid() {
+            const grid = document.getElementById('packagesGrid');
+            grid.innerHTML = packagesData.map(p => `
+                <div class="package-card ${p.featured ? 'featured' : ''}" onmouseenter="playSound('hover')">
+                    ${p.featured ? '<div class="package-badge">MEJOR VALOR ⭐</div>' : ''}
+                    <div class="package-img-container">
+                        <div style="font-size: 3.5rem; filter: drop-shadow(0 0 15px var(--primary));">${p.icon}</div>
+                    </div>
+                    <div class="package-amount">${p.amount}</div>
+                    <div class="package-game">${p.game}</div>
+                    <div class="package-price">$${p.price.toFixed(2)}</div>
+                    <button class="btn-cyber btn-primary-cyber" style="width:100%;" onclick="addToCart(${p.id})">AGREGAR 🛒</button>
+                </div>
+            `).join('');
+        }
+
+        /* ===================================================
+           7. CART & CHECKOUT
+           =================================================== */
+        function addToCart(pkgId) {
+            playSound('add');
+            const pkg = packagesData.find(p => p.id === pkgId);
+            const existing = cart.find(item => item.id === pkgId);
+
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...pkg, qty: 1 });
+            }
+
+            updateCartUI();
+            confetti({
+                particleCount: 35,
+                spread: 50,
+                origin: { y: 0.8 },
+                colors: ['#00f0ff', '#ffffff', '#ffe600']
+            });
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cartBadge');
+            const list = document.getElementById('cartItemsList');
+            const totalSpan = document.getElementById('cartTotal');
+
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            badge.textContent = totalQty;
+
+            if (cart.length === 0) {
+                list.innerHTML = '<div style="text-align:center; color:#64748b; margin-top:3rem;">TU CARRITO ESTÁ VACÍO</div>';
+                totalSpan.textContent = '$0.00';
+                return;
+            }
+
+            let grandTotal = 0;
+            list.innerHTML = cart.map(item => {
+                const sub = item.price * item.qty;
+                grandTotal += sub;
+                return `
+                    <div class="cart-item">
+                        <div>
+                            <div class="cart-item-title">${item.amount} (${item.game})</div>
+                            <div class="cart-item-subtitle">$${item.price.toFixed(2)} x ${item.qty}</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div class="cart-item-price">$${sub.toFixed(2)}</div>
+                            <button style="background:none; border:none; color:var(--secondary); cursor:pointer;" onclick="removeFromCart(${item.id})">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            totalSpan.textContent = '$' + grandTotal.toFixed(2);
+        }
+
+        function removeFromCart(id) {
+            playSound('click');
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
+        }
+
+        function toggleCart() {
+            playSound('click');
+            document.getElementById('cartModal').classList.toggle('open');
+        }
+
+        function startCheckout() {
+            if (cart.length === 0) {
+                alert('¡El carrito está vacío!');
+                return;
+            }
+
+            playSound('click');
+            toggleCart();
+
+            const overlay = document.getElementById('checkoutOverlay');
+            const box = document.getElementById('checkoutBox');
+            overlay.classList.add('active');
+
+            box.innerHTML = `
+                <h2 style="font-family: var(--font-title); color: var(--primary); margin-bottom:1rem; font-size:1.3rem;">⚡ INICIANDO TRANSFERENCIA NEXUS</h2>
+                <p style="color: #94a3b8; font-size:0.9rem;">Conectando con Servidores Cuánticos de Autenticación...</p>
+                <div class="checkout-spinner"></div>
+                <p style="font-family: var(--font-title); font-size: 0.8rem; color: var(--accent);">PROCESANDO ENCRIPTACIÓN SSL-256...</p>
+            `;
+
+            setTimeout(() => {
+                playSound('success');
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.5 },
+                    colors: ['#00f0ff', '#ff007f', '#ffe600']
+                });
+
+                box.innerHTML = `
+                    <div style="font-size: 3rem; margin-bottom: 0.8rem;">🎉</div>
+                    <h2 style="font-family: var(--font-title); color: #00ff88; margin-bottom:0.5rem; font-size:1.3rem;">¡COMPRA COMPLETADA CON ÉXITO!</h2>
+                    <p style="color: #cbd5e1; margin-bottom: 1.2rem; font-size:0.9rem;">Tus monedas virtuales han sido acreditadas instantáneamente a tu cuenta vinculada.</p>
+                    <div style="background: rgba(0, 240, 255, 0.1); border: 1px dashed var(--primary); padding: 0.8rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <span style="font-family: var(--font-title); font-size:0.8rem; color: var(--primary);">ID TRANSACCIÓN: NEXUS-${Math.floor(Math.random()*899999 + 100000)}</span>
+                    </div>
+                    <button class="btn-cyber btn-primary-cyber" style="width:100%;" onclick="closeCheckout()">VOLVER A LA TIENDA</button>
+                `;
+
+                cart = [];
+                updateCartUI();
+            }, 2500);
+        }
+
+        function closeCheckout() {
+            playSound('click');
+            document.getElementById('checkoutOverlay').classList.remove('active');
+        }
+
+        function scrollToSection(id) {
+            playSound('click');
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // INIT
+        renderGamesGrid();
+        renderPackagesGrid();
+        updateCartUI();
+    </script>
+</body>
+</html>
